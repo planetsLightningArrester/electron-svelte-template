@@ -1,0 +1,136 @@
+# Continuos Integration workflow
+name: 🔄 CI
+
+# Controls when the workflow will run
+on:
+  pull_request: 
+    paths: 
+      - .github/workflows/ci.yml
+      - backend/**/*
+      - frontend/**/*
+      - package.json
+      - tsconfig.json
+
+  push:
+    branches: ['main']
+    paths: 
+      - .github/workflows/ci.yml
+      - backend/**/*
+      - frontend/**/*
+      - package.json
+      - tsconfig.json
+
+  # Can be triggered by other workflows
+  workflow_call:
+    inputs:
+      latest_deps:
+        type: boolean
+        default: false
+        description: Whether the latest dependencies should be used
+  
+  # Allow manual trigger
+  workflow_dispatch:
+
+# Jobs
+jobs:
+
+  sanitize:
+    name: "🧹 Sanitize"
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 🛠️ NodeJS setup
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: 🔧 Install latest dependencies
+        if: ${{ always() && contains(inputs.latest_deps, 'true') }}
+        shell: bash
+        run: |
+          npm ci
+          cd backend
+          ../scripts/force_update.sh
+          cd ../frontend
+          ../scripts/force_update.sh
+
+      - name: 🔧 Install dependencies
+        if: ${{ always() && !contains(inputs.latest_deps, 'true') }}
+        shell: bash
+        run:  |
+          npm ci
+
+      - name: 🧹 Run linters
+        shell: bash
+        run:  npm run lint
+
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [{ version: ubuntu-latest, script: ../scripts/force_update.sh }, { version: windows-latest, script: ../scripts/force_update.ps1 }, { version: macOS-latest, script: ../scripts/force_update.sh }]
+    name: "🧪 Test (${{ matrix.os.version }})"
+    runs-on: ${{ matrix.os.version }}
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 🛠️ NodeJS setup
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: 🔧 Install latest dependencies
+        if: ${{ always() && contains(inputs.latest_deps, 'true') }}
+        run: |
+          npm ci
+          cd backend
+          ${{ matrix.os.script }}
+          cd ../frontend
+          ${{ matrix.os.script }}
+
+      - name: 🔧 Install dependencies
+        if: ${{ always() && !contains(inputs.latest_deps, 'true') }}
+        run:  |
+          npm ci
+
+      - name: 🧪 Run test
+        run:  npm run test
+
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [{ version: ubuntu-latest, script: ../scripts/force_update.sh }, { version: windows-latest, script: ../scripts/force_update.ps1 }, { version: macOS-latest, script: ../scripts/force_update.sh }]
+    name: "📦 Build (${{ matrix.os.version }})"
+    runs-on: ${{ matrix.os.version }}
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 🛠️ NodeJS setup
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: 🔧 Install latest dependencies
+        if: ${{ always() && contains(inputs.latest_deps, 'true') }}
+        run: |
+          npm ci
+          cd backend
+          ${{ matrix.os.script }}
+          cd ../frontend
+          ${{ matrix.os.script }}
+
+      - name: 🔧 Install dependencies
+        if: ${{ always() && !contains(inputs.latest_deps, 'true') }}
+        run:  |
+          npm ci
+
+      - name: 📦 Run build
+        run:  npm run build
+
+# EOF
+

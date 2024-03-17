@@ -1,0 +1,11 @@
+{
+  "main_page": {
+    "title": "计算你的假期天数",
+    "days": "假期天数",
+    "update": "有新的更新可用",
+    "updating": "更新中..."
+  },
+  "footer": {
+    "github_page": "GitHub页面"
+  }
+}

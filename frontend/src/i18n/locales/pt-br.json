@@ -1,0 +1,11 @@
+{
+  "main_page": {
+    "title": "Calcule seus dias de férias",
+    "days": "dias de férias",
+    "update": "Novas atualizações disponíveis",
+    "updating": "Atualizando..."
+  },
+  "footer": {
+    "github_page": "Página do GitHub"
+  }
+}
