@@ -11,6 +11,21 @@
   // Set background
   document.body.style.backgroundSize = 'cover'
 
+  // Svelte generates innerHTML assignments breaking CSP "require-trusted-types-for 'script'" in production code
+  // https://github.com/sveltejs/svelte/issues/10826
+  if (
+    'trustedTypes' in window &&
+    window.trustedTypes !== null &&
+    typeof window.trustedTypes === 'object' &&
+    'createPolicy' in window.trustedTypes &&
+    window.trustedTypes.createPolicy !== null &&
+    window.trustedTypes.createPolicy instanceof Function
+  ) {
+    window.trustedTypes.createPolicy('default', {
+      createHTML: (string: string) => string.replace(/</g, '<').replace(/>/g, '>'),
+    })
+  }
+
   $: {
     // Set title
     document.title = $_('main_page.title')
