@@ -93,11 +93,11 @@ cd backend && npm version patch
 - El flujo de trabajo de actualización automática actualiza las dependencias de prod y dev a sus últimas versiones y ejecuta una CI. Si todo pasa, se creará un nuevo lanzamiento. Si decides usar esto, asegúrate de tener una buena cobertura de pruebas para evitar degradaciones en el lanzamiento.
 - Si encuentras algún problema, considera informar un [Issue](https://github.com/planetsLightningArrester/electron-svelte-template/issues)
 - Los mensajes de error se pueden encontrar en:
-  - Linux: `~/.config/electron
-
--svelte-template/log`
+  - Linux: `~/.config/electron-svelte-template-backend/log`
   - Mac: `~/Library/Application Support/electron-svelte-template/log`
   - Windows: `%APPDATA%/electron-svelte-template/log`
+- Marca la casilla de verificación a continuación para evitar que falle el flujo de trabajo de actualización automática de GitHub debido a la falta de permiso de escritura - **Settings > Actions > General**.
+![alt](./docs/assets/repo_write_permission.png)
 
 ## 💻 Desarrollo
 

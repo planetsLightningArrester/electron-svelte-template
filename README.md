@@ -96,6 +96,8 @@ cd backend && npm version patch
   - Linux: `~/.config/electron-svelte-template/log`
   - Mac: `~/Library/Application Support/electron-svelte-template/log`
   - Windows: `%APPDATA%/electron-svelte-template/log`
+- Marque o checkbox abaixo para evitar que o workflow de auto-update do GitHub falhe com falta de permissão de escrita - **Settings > Actions > General**.
+![alt](./docs/assets/repo_write_permission.png)
 
 ## 💻 Desenvolvimento
 

@@ -5,6 +5,7 @@ dist
 !src/tests/notes/**/*
 
 *.png
+!docs/assets/*.png
 !**/src/**/*.png
 !frontend/**/*.png
 backend/src/client/**

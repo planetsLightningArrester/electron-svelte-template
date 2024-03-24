@@ -96,6 +96,8 @@ cd backend && npm version patch
   - Linux: `~/.config/electron-svelte-template-backend/log`
   - Mac: `~/Library/Application Support/electron-svelte-template-backend/log`
   - Windows: `%APPDATA%/electron-svelte-template-backend/log`
+- Check the checkbox below to prevent the GitHub auto-update workflow from failing due to lack of write permission - **Settings > Actions > General**.
+![alt](./docs/assets/repo_write_permission.png)
 
 ## 💻 Development
 

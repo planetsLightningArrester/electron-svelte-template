@@ -98,6 +98,8 @@ cd backend && npm version patch
   - Linux：`~/.config/electron-svelte-template/log`
   - Mac：`~/Library/Application Support/electron-svelte-template/log`
   - Windows：`%APPDATA%/electron-svelte-template/log`
+- 请勾选下面的复选框，以避免 GitHub 的自动更新工作流程由于缺乏写入权限而失败 - **Settings > Actions > General**
+![alt](./docs/assets/repo_write_permission.png)
 
 ## 💻 开发
 
