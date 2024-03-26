@@ -1,7 +1,7 @@
 {
   "name": "electron-svelte-template",
   "displayName": "Electron-Svelte template",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Portable desktop template app for Windows, Linux, and MacOS using Electron.js and Svelte",
   "main": "dist/main.js",
   "author": "Planet's Lightning Arrester",
@@ -77,7 +77,7 @@
     "typescript": "^5.4.3"
   },
   "dependencies": {
-    "printaeu": "^0.1.12"
+    "printaeu": "^0.1.22"
   },
   "lint-staged": {
     "*.{ts,js}": [
