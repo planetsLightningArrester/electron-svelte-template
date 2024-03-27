@@ -77,7 +77,7 @@
     "typescript": "^5.4.3"
   },
   "dependencies": {
-    "printaeu": "^0.1.22"
+    "printaeu": "^0.1.12"
   },
   "lint-staged": {
     "*.{ts,js}": [
