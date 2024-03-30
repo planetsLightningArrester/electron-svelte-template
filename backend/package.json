@@ -1,7 +1,7 @@
 {
   "name": "electron-svelte-template",
   "displayName": "Electron-Svelte template",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Portable desktop template app for Windows, Linux, and MacOS using Electron.js and Svelte",
   "main": "dist/main.js",
   "author": "Planet's Lightning Arrester",
@@ -63,7 +63,7 @@
     "@electron-forge/plugin-auto-unpack-natives": "^7.3.1",
     "@eslint/create-config": "^0.4.6",
     "@playwright/test": "^1.42.1",
-    "@types/node": "^20.11.30",
+    "@types/node": "^20.12.2",
     "electron": "^29.1.6",
     "eslint": "^8.57.0",
     "eslint-config-standard-with-typescript": "^43.0.1",
