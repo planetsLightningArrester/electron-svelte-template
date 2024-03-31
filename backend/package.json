@@ -1,7 +1,7 @@
 {
   "name": "electron-svelte-template",
   "displayName": "Electron-Svelte template",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Portable desktop template app for Windows, Linux, and MacOS using Electron.js and Svelte",
   "main": "dist/main.js",
   "author": "Planet's Lightning Arrester",
