@@ -1,6 +1,10 @@
 # Continuos Integration workflow
 name: 🔄 CI
 
+defaults:
+  run:
+    shell: bash
+
 # Controls when the workflow will run
 on:
   pull_request: 
@@ -26,10 +30,31 @@ on:
       latest_deps:
         type: boolean
         default: false
-        description: Whether the latest dependencies should be used
-  
+        description: Whether the latest dependencies should be used.
+      success_on_failure:
+        type: boolean
+        default: false
+        description: Whether the workflow should be marked as succeed even on failures. Relevant for auto-update checks.
+    outputs:
+      success:
+        description: Whether this workflow failed or succeed. Only relevant if `inputs.success_on_failure` is `true`.
+        value: ${{ jobs.set_success_output.outputs.success }}
+
   # Allow manual trigger
   workflow_dispatch:
+    inputs:
+      latest_deps:
+        type: boolean
+        default: false
+        description: Whether the latest dependencies should be used.
+      success_on_failure:
+        type: boolean
+        default: false
+        description: Whether the workflow should be marked as succeed even on failures. Relevant for auto-update checks.
+
+# Set to `false` when some step in the workflow fail. The last step gather it and set to the output result
+env:
+  success: true
 
 # Jobs
 jobs:
@@ -48,23 +73,33 @@ jobs:
 
       - name: 🔧 Install latest dependencies
         if: ${{ always() && contains(inputs.latest_deps, 'true') }}
-        shell: bash
         run: |
-          npm ci
-          cd backend
-          ../scripts/force_update.sh
-          cd ../frontend
-          ../scripts/force_update.sh
+          {
+            npm ci
+            cd backend
+            ../scripts/force_update.sh
+            cd ../frontend
+            ../scripts/force_update.sh
+          } || {
+            [[ "${{ inputs.success_on_failure }}" != "true" ]] && exit 1
+            echo "success=false" >> $GITHUB_ENV
+          }
 
       - name: 🔧 Install dependencies
         if: ${{ always() && !contains(inputs.latest_deps, 'true') }}
-        shell: bash
         run:  |
-          npm ci
+          npm ci || {
+            [[ "${{ inputs.success_on_failure }}" != "true" ]] && exit 1
+            echo "success=false" >> $GITHUB_ENV
+          }
 
       - name: 🧹 Run linters
-        shell: bash
-        run:  npm run lint
+        if: ${{ env.success == 'true' }}
+        run: |
+          npm run lint || {
+            [[ "${{ inputs.success_on_failure }}" != "true" ]] && exit 1
+            echo "success=false" >> $GITHUB_ENV
+          }
 
   test:
     strategy:
@@ -85,19 +120,32 @@ jobs:
       - name: 🔧 Install latest dependencies
         if: ${{ always() && contains(inputs.latest_deps, 'true') }}
         run: |
-          npm ci
-          cd backend
-          ${{ matrix.os.script }}
-          cd ../frontend
-          ${{ matrix.os.script }}
+          {
+            npm ci
+            cd backend
+            ${{ matrix.os.script }}
+            cd ../frontend
+            ${{ matrix.os.script }}
+          } || {
+            [[ "${{ inputs.success_on_failure }}" != "true" ]] && exit 1
+            echo "success=false" >> $GITHUB_ENV
+          }
 
       - name: 🔧 Install dependencies
         if: ${{ always() && !contains(inputs.latest_deps, 'true') }}
         run:  |
-          npm ci
+          npm ci || {
+            [[ "${{ inputs.success_on_failure }}" != "true" ]] && exit 1
+            echo "success=false" >> $GITHUB_ENV
+          }
 
       - name: 🧪 Run test
-        run:  npm run test
+        if: ${{ env.success == 'true' }}
+        run: |
+          npm run test || {
+            [[ "${{ inputs.success_on_failure }}" != "true" ]] && exit 1
+            echo "success=false" >> $GITHUB_ENV
+          }
 
   build:
     strategy:
@@ -118,19 +166,41 @@ jobs:
       - name: 🔧 Install latest dependencies
         if: ${{ always() && contains(inputs.latest_deps, 'true') }}
         run: |
-          npm ci
-          cd backend
-          ${{ matrix.os.script }}
-          cd ../frontend
-          ${{ matrix.os.script }}
+          {
+            npm ci
+            cd backend
+            ${{ matrix.os.script }}
+            cd ../frontend
+            ${{ matrix.os.script }}
+          } || {
+            [[ "${{ inputs.success_on_failure }}" != "true" ]] && exit 1
+            echo "success=false" >> $GITHUB_ENV
+          }
 
       - name: 🔧 Install dependencies
         if: ${{ always() && !contains(inputs.latest_deps, 'true') }}
         run:  |
-          npm ci
+          npm ci || {
+            [[ "${{ inputs.success_on_failure }}" != "true" ]] && exit 1
+            echo "success=false" >> $GITHUB_ENV
+          }
 
       - name: 📦 Run build
-        run:  npm run build
+        if: ${{ env.success == 'true' }}
+        run: |
+          npm run build || {
+            [[ "${{ inputs.success_on_failure }}" != "true" ]] && exit 1
+            echo "success=false" >> $GITHUB_ENV
+          }
 
-# EOF
-
+  set_success_output:
+    name: 🎯 Set success output
+    needs: [sanitize, test, build]
+    if: ${{ always() }}
+    runs-on: ubuntu-latest
+    outputs:
+      success: ${{ steps.set-success.outputs.success }}
+    steps:
+      - name: 🎯 Set success output
+        id: set-success
+        run: echo "success=${{ env.success }}" >> $GITHUB_OUTPUT
