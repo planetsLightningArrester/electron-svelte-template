@@ -184,8 +184,7 @@ jobs:
       matrix:
         os: [
           { version: ubuntu-latest, script: ../scripts/force_update.sh },
-          # FIXME: force failure to check matrix output
-          { version: windows-latest, script: ../scripts/force_update.sh },
+          { version: windows-latest, script: ../scripts/force_update.ps1 },
           { version: macOS-latest, script: ../scripts/force_update.sh }
           ]
     name: "📦 Build (${{ matrix.os.version }})"
