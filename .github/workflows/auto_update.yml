@@ -18,12 +18,13 @@ jobs:
     secrets: inherit
     with:
       latest_deps: true
+      success_on_failure: true
 
   # Update either all the dependencies
   update_all_deps:
     name: 📡 Update dependencies
     needs: [ci_check_latest_deps]
-    if: ${{ always() && contains(needs.*.result, 'success') }}
+    if: ${{ always() && contains(needs.ci_check_latest_deps.outputs.success, 'true') }}
     runs-on: ubuntu-latest
     outputs:
       RELEASE_VERSION: ${{ steps.push.outputs.RELEASE_VERSION }}
