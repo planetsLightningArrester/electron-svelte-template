@@ -94,7 +94,7 @@ jobs:
           }
 
       - name: 🧹 Run linters
-        if: ${{ steps.install-latest-deps.outputs.success == 'true' || steps.install-deps.outputs.success == 'true' }}
+        if: ${{ steps.install-latest-deps.outputs.success != 'false' && steps.install-deps.outputs.success != 'false' }}
         id: linter
         run: |
           npm run lint || {
@@ -161,7 +161,7 @@ jobs:
           }
 
       - name: 🧪 Run test
-        if: ${{ steps.install-latest-deps.outputs.success == 'true' || steps.install-deps.outputs.success == 'true' }}
+        if: ${{ steps.install-latest-deps.outputs.success != 'false' && steps.install-deps.outputs.success != 'false' }}
         id: test
         run: |
           npm run test || {
@@ -229,7 +229,7 @@ jobs:
           }
 
       - name: 📦 Run build
-        if: ${{ steps.install-latest-deps.outputs.success == 'true' || steps.install-deps.outputs.success == 'true' }}
+        if: ${{ steps.install-latest-deps.outputs.success != 'false' && steps.install-deps.outputs.success != 'false' }}
         id: build
         run: |
           npm run build || {
