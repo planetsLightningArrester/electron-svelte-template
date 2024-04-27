@@ -34,10 +34,10 @@ on:
       success_on_failure:
         type: boolean
         default: false
-        description: Whether the workflow should be marked as succeed even on failures. Relevant for auto-update checks.
+        description: Whether the workflow should be marked as success even on failures. Relevant for auto-update checks.
     outputs:
       success:
-        description: Whether this workflow failed or succeed. Only relevant if `inputs.success_on_failure` is `true`.
+        description: Whether this workflow failed or success. Only relevant if `inputs.success_on_failure` is `true`.
         value: ${{ jobs.set_success_output.outputs.success }}
 
   # Allow manual trigger
@@ -50,7 +50,7 @@ on:
       success_on_failure:
         type: boolean
         default: false
-        description: Whether the workflow should be marked as succeed even on failures. Relevant for auto-update checks.
+        description: Whether the workflow should be marked as success even on failures. Relevant for auto-update checks.
 
 # Jobs
 jobs:
