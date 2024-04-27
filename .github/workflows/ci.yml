@@ -256,11 +256,15 @@ jobs:
       - name: 🎯 Set success output
         id: set-success
         run: |
+          success_result=''
           [[ "${{ needs.sanitize.outputs.success }}" != "false" ]] && \
-          [[ "${{ needs.test.outputs.ubuntu-latest-success }}" != "false" ]] && \
-          [[ "${{ needs.test.outputs.windows-latest-success }}" != "false" ]] && \
-          [[ "${{ needs.test.outputs.macOS-latest-success }}" != "false" ]] && \
-          [[ "${{ needs.build.outputs.ubuntu-latest-success }}" != "false" ]] && \
-          [[ "${{ needs.build.outputs.windows-latest-success }}" != "false" ]] && \
-          [[ "${{ needs.build.outputs.macOS-latest-success }}" != "false" ]] && \
-          echo "success=true" >> $GITHUB_OUTPUT || echo "success=false" >> $GITHUB_OUTPUT
+            [[ "${{ needs.test.outputs.ubuntu-latest-success }}" != "false" ]] && \
+            [[ "${{ needs.test.outputs.windows-latest-success }}" != "false" ]] && \
+            [[ "${{ needs.test.outputs.macOS-latest-success }}" != "false" ]] && \
+            [[ "${{ needs.build.outputs.ubuntu-latest-success }}" != "false" ]] && \
+            [[ "${{ needs.build.outputs.windows-latest-success }}" != "false" ]] && \
+            [[ "${{ needs.build.outputs.macOS-latest-success }}" != "false" ]] && \
+            success_result='true'|| success_result='false'
+
+          echo "[INFO] success result: ${success_result}"
+          echo "success=${success_result}" >> $GITHUB_OUTPUT || echo "success=${success_result}" >> $GITHUB_OUTPUT
